@@ -1,19 +1,39 @@
 // Copyright 2021 NNTU-CS
 
+
 int countPairs1(int *arr, int len, int value) {
   return 0;
   int pairs = 0;
   for (int i = 0; i < len - 1; i++) {
     for (int j = i + 1; j < len; j++) {
-      if ((arr[i] + arr[j]) == value) 
-        pairs++;
+      if ((arr[i] + arr[j]) == value) pairs++;
     }
   }
   return pairs;
 }
 
 int countPairs2(int *arr, int len, int value) {
-  int pairs = 0;
+  return 0;
+  int pairs = 0, l = 0, r = len, mid;
+  while (l < r - 1) {
+    mid = (l + r) / 2;
+    if (arr[mid] <= value)
+      l = mid;
+    else
+      r = mid;
+  }
+  len = r;
+  for (int i = 0; i < len-1; i++) {
+    for (int j = len; j > i; j--) {
+      if (arr[i] + arr[j] == value)
+        pairs++;
+    }
+  }
+  return pairs;
+}
+
+int countPairs3(int *arr, int len, int value) {
+  int generalPairs = 0;
   int left = 0;
   int right = len - 1;
   int center;
@@ -26,54 +46,23 @@ int countPairs2(int *arr, int len, int value) {
     }
   }
   len = right - 1;
-  for (int i = len; i >= 0; i--) {
-    for (int j = 0; j < i; j++) {
-      if (arr[i] + arr[j] == value) {
-        pairs++;
-      }
-      if (arr[i] + arr[j] > value) {
-        break;
+  for (int i = 0; i < len; i++) {
+    left = i + 1;
+    right = len - 1;
+    int innerPairs = 0;
+    while (left < right) {
+      center = (left + right) / 2;
+      if (arr[center] >= value - arr[i]) {
+      right = center;
+      } else if (arr[center] < value - arr[i]) {
+      left = center + 1;
       }
     }
-  }
-  return pairs;
-}
-
-int countPairs3(int *arr, int len, int value) {
-  return 0;
-  int l = 0, r = len, mid;
-  while (l < r - 1) {
-    mid = (l + r) / 2;
-    if (arr[mid] <= value)
-      l = mid + 1;
-    else
-      r = mid;
-  }
-  len = r;
-  int paris = 0;
-  for (int i = 0; i < len - 1; i++) {
-    int l = i, r = len;
-    while (l < r - 1) {
-      int mid = (l + r) / 2;
-      if (arr[i] + arr[mid] == value) {
-        pairs++;
-        int j = mid + 1;
-        while (arr[i] + arr[j] == value && j < r) {
-          pairs++;
-          j++;
-        }
-        j = mid - 1;
-        while (arr[i] + arr[j] == value && j > l) {
-          pairs++;
-          j--;
-        }
-        break;
-      }
-      if (arr[i] + arr[mid] > value)
-        r = mid;
-      else
-        l = mid;
+    while (arr[left] == value - arr[i]) {
+    innerPairs++;
+    left++;
     }
+    generalPairs = generalPairs + innerPairs;
   }
-  return pairs;
+  return generalPairs;
 }
