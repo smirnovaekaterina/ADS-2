@@ -33,36 +33,40 @@ int countPairs2(int *arr, int len, int value) {
 }
 
 int countPairs3(int *arr, int len, int value) {
-  int generalPairs = 0;
-  int left = 0;
-  int right = len - 1;
-  int center;
-  while (left < right - 1) {
-    center = (right + left) / 2;
-    if (arr[center] > value) {
-      right = center;
-    } else if (arr[center] <= value) {
-      left = center;
-    }
+  return 0;
+  int l = 0, r = len, mid;
+  while (l < r - 1) {
+    mid = (l + r) / 2;
+    if (arr[mid] <= value)
+      l = mid + 1;
+    else
+      r = mid;
   }
-  len = right - 1;
-  for (int i = 0; i < len; i++) {
-    left = i + 1;
-    right = len - 1;
-    int innerPairs = 0;
-    while (left < right) {
-      center = (left + right) / 2;
-      if (arr[center] >= value - arr[i]) {
-      right = center;
-      } else if (arr[center] < value - arr[i]) {
-      left = center + 1;
+  len = r;
+  int pairs = 0;
+  for (int i = 0; i < len - 1; i++) {
+    int l = i, r = len;
+    while (l < r - 1) {
+      int mid = (l + r) / 2;
+      if (arr[i] + arr[mid] == value) {
+        pairs++;
+        int j = mid + 1;
+        while (arr[i] + arr[j] == value && j < r) {
+          pairs++;
+          j++;
+        }
+        j = mid - 1;
+        while (arr[i] + arr[j] == value && j > l) {
+          pairs++;
+          j--;
+        }
+        break;
       }
+      if (arr[i] + arr[mid] > value)
+        r = mid;
+      else
+        l = mid;
     }
-    while (arr[left] == value - arr[i]) {
-    innerPairs++;
-    left++;
-    }
-    generalPairs = generalPairs + innerPairs;
   }
-  return generalPairs;
+  return pairs;
 }
