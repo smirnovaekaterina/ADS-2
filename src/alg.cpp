@@ -1,61 +1,40 @@
 // Copyright 2021 NNTU-CS
-
+#include "alg.h"
 
 int countPairs1(int *arr, int len, int value) {
   int pairs = 0;
-  for (int i = 0; i < len - 1; i++){
-    for (int j = i + 1; j < len; j++){
+  for (int i = 0; i < len - 1; i++) {
+    for (int j = i + 1; j < len; j++) {
       if (arr[i] + arr[j] == value)
         pairs++;
     }
   }
-    }
   return pairs;
 }
-
-//int countPairs2(int *arr, int len, int value) {
-//  int pairs = 0;
-//  int j = len - 1;
-//  for (int i = 0; i < len / 2; i++) {
-//    if (arr[i] + arr[j] > value) {
-//      while (arr[j] == arr[j - 1])
-//        j--;
-//      j--;
-//    } else if (arr[i] + arr[j] < value) {
-//      return pairs;
-//    }
-//    if (arr[i] + arr[j] == value) {
-//      pairs++;
-//      while (arr[j] == arr[j - 1]) {
-//        pairs++;
-//        j--;
-//      }
-//    }
-//  }
-//  return pairs;
-//}
 
 int countPairs2(int *arr, int len, int value) {
   int pairs = 0;
   int j = len - 1;
   for (int i = 0; i < len / 2 + 1; i++) {
-    if (arr[i] + arr[j] > value) {
-      int temp = arr[j];
-      while (arr[j] == temp) {
-        j--;
+    while (arr[i] + arr[j] != value && i < j) {
+      if (arr[i] + arr[j] > value) {
+        int temp = arr[j];
+        while (arr[j] == temp) {
+          j--;
+        }
+      } else if (arr[i] + arr[j] < value) {
+        break;
       }
     }
-    else if (arr[i] + arr[j] < value) {
-      return pairs;
-    }
     if (arr[i] + arr[j] == value) {
-      /*int temp = arr[j];
+      int temp = arr[j];
       int temp2 = j;
-      while (arr[temp2] == temp) {
+      while (temp == arr[temp2] && temp2 > i) {
         pairs++;
         temp2--;
-      }*/
-      pairs++;
+      }
+      if (arr[i] != arr[i + 1])
+        j = temp2;
     }
   }
   return pairs;
@@ -69,6 +48,8 @@ int countPairs3(int *arr, int len, int value) {
     int last = len;
     while (first < last) {
       int middle = (first + last) / 2;
+      if (middle == first || middle == last)
+        break;
       if (number < arr[middle]) {
         last = middle;
       } else if (number > arr[middle]) {
@@ -80,7 +61,7 @@ int countPairs3(int *arr, int len, int value) {
           j++;
         }
         j = 1;
-        while (number == arr[middle - j]) {
+        while (number == arr[middle - j] && i < middle - j) {
           pairs++;
           j++;
         }
